@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevlightHouse - Web Application Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #121826;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* 顶部导航栏 - 简化样式 */
+        .top-nav {
+            background-color: #0d1117;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-container svg {
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+        }
+        
+        .logo-container img {
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .logo-text span {
+            margin-left: 8px;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .main-nav {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            /* 移除背景色和阴影 */
+            background-color: transparent;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        
+        .main-nav a {
+            text-decoration: none;
+            margin: 0 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 5px;
+            border-radius: 0; /* 移除边框圆角 */
+            color: #a0a0a0; /* 统一颜色 */
+        }
+        
+        /* 移除导航项不同颜色的样式 */
+        .main-nav a.research-link,
+        .main-nav a.setup-link,
+        .main-nav a.analysis-link,
+        .main-nav a.templates-link,
+        .main-nav a.nav-link,
+        .main-nav a.consulting-link {
+            color: #a0a0a0;
+        }
+        
+        /* 简化导航项悬停效果 */
+        .main-nav a:hover {
+            background-color: transparent; /* 移除悬停背景色 */
+            color: white; /* 统一悬停颜色 */
+        }
+        
+        .main-nav a.research-link:hover,
+        .main-nav a.setup-link:hover,
+        .main-nav a.analysis-link:hover,
+        .main-nav a.templates-link:hover,
+        .main-nav a.nav-link:hover,
+        .main-nav a.consulting-link:hover {
+            color: white;
+        }
+        
+        /* 语言切换按钮 - 进一步简化样式 */
+        .lang-switch {
+            margin-left: 8px;
+            background-color: transparent;
+            border: none;
+            color: #a0a0a0;
+            padding: 8px 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            font-weight: 500;
+            /* 移除所有可能的背景和边框 */
+            box-shadow: none;
+            border-radius: 0;
+            text-decoration: none;
+        }
+        
+        .lang-switch:hover {
+            background-color: transparent;
+            color: white;
+        }
+        
+        /* 确保英文/中文按钮没有任何背景色 */
+        .lang-switch .en,
+        .lang-switch .zh {
+            background-color: transparent;
+        }
+        
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: #1a202c;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            padding: 0;
+            overflow-y: auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 120px 20px;
+            background: linear-gradient(to right, #1a1a2e, #16213e);
+            border-radius: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-height: calc(100vh - 62px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle-en {
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle-cn {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 导航栏样式 */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            color: #a0a0a0;
+            text-decoration: none;
+            margin: 0 20px;
+            padding: 8px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            border-radius: 0;
+            display: inline-block;
+        }
+        
+        .nav-link:hover {
+            color: white;
+            background-color: transparent;
+        }
+        
+        /* 确保所有导航链接的样式一致 */
+        .nav-link.need,
+        .nav-link.setup,
+        .nav-link.research,
+        .nav-link.templates,
+        .nav-link.nav,
+        .nav-link.consulting {
+            color: #a0a0a0;
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        
+        .nav-link.need:hover,
+        .nav-link.setup:hover,
+        .nav-link.research:hover,
+        .nav-link.templates:hover,
+        .nav-link.nav:hover,
+        .nav-link.consulting:hover {
+            color: white;
+            background-color: transparent;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #222836;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            position: relative;
+            color: #ffffff;
+        }
+        
+        .section:nth-of-type(1) h2 {
+            color: #e74c3c;
+            border-bottom: 2px solid #e74c3c;
+        }
+        
+        .section:nth-of-type(2) h2 {
+            color: #2ecc71;
+            border-bottom: 2px solid #2ecc71;
+        }
+        
+        .section:nth-of-type(3) h2 {
+            color: #9b59b6;
+            border-bottom: 2px solid #9b59b6;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .tool-card {
+            background-color: #2a3142;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.4s ease;
+            border-left: 5px solid transparent;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section:nth-of-type(1) .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(231, 76, 60, 0.2);
+            background-color: #2d3748;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .section:nth-of-type(2) .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(46, 204, 113, 0.2);
+            background-color: #2d3748;
+            border-left: 5px solid #2ecc71;
+        }
+        
+        .section:nth-of-type(3) .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(155, 89, 182, 0.2);
+            background-color: #2d3748;
+            border-left: 5px solid #9b59b6;
+        }
+        
+        .tool-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+        
+        .tool-card a {
+            color: #63b3ed;
+            text-decoration: none;
+            display: block;
+            word-break: break-all;
+            font-size: 0.95rem;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-card a:hover {
+            text-decoration: none;
+            color: #4fd1c5;
+            transform: translateX(5px);
+        }
+        
+        .tool-card p {
+            margin-top: 10px;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(to right, #0d1117, #1a202c);
+            color: white;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 语言切换相关样式 - 修复版 */
+        /* 默认隐藏中文内容 */
+        .zh {
+            display: none;
+        }
+        
+        /* 默认显示英文内容 */
+        .en {
+            display: block;
+        }
+        
+        /* 对于内联元素的特殊处理 */
+        span.zh, a.zh {
+            display: none;
+        }
+        
+        span.en, a.en {
+            display: inline;
+        }
+        
+        /* 中文模式下的显示规则 */
+        html[lang="zh"] .zh {
+            display: block;
+        }
+        
+        html[lang="zh"] .en {
+            display: none;
+        }
+        
+        html[lang="zh"] span.zh, html[lang="zh"] a.zh {
+            display: inline;
+        }
+        
+        html[lang="zh"] span.en, html[lang="zh"] a.en {
+            display: none;
+        }
+        
+        @media (max-width: 1200px) {
+            header {
+                padding: 80px 20px;
+            }
+            
+            .content-area {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 60px 15px;
+            }
+            
+            .content-area {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle-en {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle-cn {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 添加新部分的样式 */
+        .section-desc {
+            margin-bottom: 25px;
+            color: #a0aec0;
+            font-size: 1.1rem;
+        }
+        
+        .template-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .template-item {
+            background-color: #2a3142;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .template-item:hover {
+            background-color: #2d3748;
+            transform: translateX(5px);
+        }
+        
+        .template-letter, .template-number {
+            font-weight: bold;
+            color: #63b3ed;
+            margin-right: 15px;
+            font-size: 1.1rem;
+            min-width: 25px;
+        }
+        
+        .template-title {
+            font-weight: bold;
+            color: #e2e8f0;
+            margin-right: 15px;
+        }
+        
+        .template-item a {
+            color: #63b3ed;
+            text-decoration: none;
+            word-break: break-all;
+            transition: color 0.3s;
+        }
+        
+        .template-item a:hover {
+            color: #4fd1c5;
+        }
+        
+        .sub-item {
+            margin-left: 30px;
+            border-left: 3px solid #4a5568;
+        }
+        
+        /* 为新部分添加不同的颜色 */
+        #website-templates h2 {
+            color: #f6ad55;
+            border-bottom: 2px solid #f6ad55;
+        }
+        
+        #nav-templates h2 {
+            color: #4fd1c5;
+            border-bottom: 2px solid #4fd1c5;
+        }
+        
+        #website-consulting h2 {
+            color: #f687b3;
+            border-bottom: 2px solid #f687b3;
+        }
+        
+        /* 修改section选择器以适应新添加的部分 */
+        .section:nth-of-type(4) .template-item:hover {
+            border-left: 5px solid #f6ad55;
+        }
+        
+        .section:nth-of-type(5) .template-item:hover {
+            border-left: 5px solid #4fd1c5;
+        }
+        
+        .section:nth-of-type(6) .template-item:hover {
+            border-left: 5px solid #f687b3;
+        }
+        
+        /* 折叠式合集样式 */
+        .collapsible-section {
+            margin-bottom: 15px;
+        }
+        
+        .collapsible-header {
+            background-color: #2a3142;
+            border-radius: 8px;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+        
+        #website-templates .collapsible-header {
+            border-left: 5px solid #f6ad55;
+        }
+        
+        #nav-templates .collapsible-header {
+            border-left: 5px solid #4fd1c5;
+        }
+        
+        #website-consulting .collapsible-header {
+            border-left: 5px solid #f687b3;
+        }
+        
+        .collapsible-header:hover {
+            background-color: #2d3748;
+        }
+        
+        .collapsible-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #e2e8f0;
+        }
+        
+        .collapsible-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .collapsible-content {
+            background-color: #222836;
+            border-radius: 0 0 8px 8px;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .collapsible-inner {
+            padding: 20px;
+        }
+        
+        .collapsible-section.active .collapsible-header {
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+        }
+        
+        .collapsible-section.active .collapsible-icon {
+            transform: rotate(180deg);
+        }
+        
+        .collapsible-section.active .collapsible-content {
+            max-height: 2000px;
+            opacity: 1;
+            padding: 20px;
+        }
+        
+        /* 收藏按钮样式 */
+        .bookmark-button {
+            text-decoration: none;
+            margin: 0 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 8px 5px;
+            color: #a0a0a0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .bookmark-button:hover {
+            color: white;
+        }
+        
+        .bookmark-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            fill: currentColor;
+        }
+        
+        /* 弹出提示框样式 */
+        .tooltip {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2a3142;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1100;
+            max-width: 400px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tooltip p {
+            margin-bottom: 10px;
+        }
+        
+        .tooltip kbd {
+            background-color: #3a4254;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+            margin: 0 3px;
+        }
+        
+        .close-tooltip {
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-tooltip:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 增强移动端显示的响应式设计 */
+        @media (max-width: 768px) {
+            /* 顶部导航栏在移动端的优化 */
+            .top-nav {
+                padding: 10px 15px;
+                flex-direction: column;
+            }
+            
+            .logo-container {
+                margin-bottom: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .main-nav {
+                overflow-x: auto;
+                justify-content: flex-start;
+                width: 100%;
+                padding: 10px 0;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch; /* 平滑滚动效果 */
+                scrollbar-width: none; /* Firefox 隐藏滚动条 */
+                -ms-overflow-style: none; /* IE 隐藏滚动条 */
+            }
+            
+            .main-nav::-webkit-scrollbar {
+                display: none; /* Chrome、Safari 隐藏滚动条 */
+            }
+            
+            .main-nav a {
+                margin: 0 10px;
+                padding: 8px 5px;
+                white-space: nowrap;
+                font-size: 0.9rem;
+            }
+            
+            /* 首屏内容在移动端的优化 */
+            header {
+                padding: 60px 15px;
+                text-align: center;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle-en {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle-cn {
+                font-size: 1.3rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                margin: 5px 0;
+                width: 80%;
+                text-align: center;
+            }
+            
+            /* 内容区域在移动端的优化 */
+            .content-area {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 30px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .tool-card {
+                padding: 15px;
+            }
+            
+            .tool-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            /* 折叠内容区域的移动端优化 */
+            .collapsible-header {
+                padding: 12px 15px;
+            }
+            
+            .collapsible-title {
+                font-size: 1rem;
+                max-width: 80%;
+            }
+            
+            .template-item {
+                padding: 12px;
+                flex-wrap: wrap;
+            }
+            
+            .template-letter, .template-number {
+                margin-right: 10px;
+                min-width: 20px;
+            }
+            
+            .template-title {
+                margin-right: 10px;
+                margin-bottom: 5px;
+                width: 100%;
+            }
+            
+            .template-item a {
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
+        
+        /* 超小屏幕设备的额外优化 */
+        @media (max-width: 480px) {
+            .main-nav a {
+                margin: 0 8px;
+                padding: 6px 3px;
+                font-size: 0.85rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle-en {
+                font-size: 1.3rem;
+            }
+            
+            .subtitle-cn {
+                font-size: 1.1rem;
+            }
+            
+            /* 提示框的移动端优化 */
+            .tooltip {
+                max-width: 90%;
+                font-size: 0.9rem;
+                padding: 12px 15px;
+            }
+            
+            .tooltip kbd {
+                padding: 2px 4px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* 横屏设备的优化 */
+        @media (max-width: 896px) and (orientation: landscape) {
+            .top-nav {
+                flex-direction: row;
+                padding: 8px 15px;
+            }
+            
+            .logo-container {
+                margin-bottom: 0;
+                width: auto;
+            }
+            
+            header {
+                padding: 30px 15px;
+                min-height: auto;
+            }
+            
+            .nav-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                width: auto;
+                margin: 5px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="top-nav">
+        <div class="logo-container">
+            <svg viewBox="0 0 1000 1000" width="48" height="48">
+                <circle cx="500" cy="500" r="500" fill="#1a1a1a"/>
+                <path d="M500 150 L400 350 L400 850 L600 850 L600 350 Z" fill="white"/>
+                <rect x="350" y="420" width="300" height="30" fill="white"/>
+                <rect x="485" y="330" width="30" height="90" fill="#3a3a3a"/>
+                <rect x="350" y="850" width="300" height="30" fill="white"/>
+            </svg>
+            <div class="logo-text">
+                <span class="en">DevlightHouse</span>
+                <span class="zh">开发灯塔</span>
+            </div>
+        </div>
+        <div class="main-nav">
+            <a href="#need-research" class="research-link">
+                <span class="en">Research</span>
+                <span class="zh">需求和调研</span>
+            </a>
+            <a href="#site-setup" class="setup-link">
+                <span class="en">Setup</span>
+                <span class="zh">上站必备</span>
+            </a>
+            <a href="#competitor-research" class="analysis-link">
+                <span class="en">Analysis</span>
+                <span class="zh">竞品调研</span>
+            </a>
+            <a href="#website-templates" class="templates-link">
+                <span class="en">Templates</span>
+                <span class="zh">上站模板</span>
+            </a>
+            <a href="#nav-templates" class="nav-link">
+                <span class="en">Nav Sites</span>
+                <span class="zh">导航站</span>
+            </a>
+            <a href="#website-consulting" class="consulting-link">
+                <span class="en">Resources</span>
+                <span class="zh">建站咨询</span>
+            </a>
+            
+            <!-- 添加收藏按钮 -->
+            <a href="javascript:void(0)" class="bookmark-button" id="bookmarkButton">
+                <svg class="bookmark-icon" viewBox="0 0 24 24">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span class="en">Bookmark</span>
+                <span class="zh">收藏</span>
+            </a>
+            
+            <a href="javascript:void(0)" class="lang-switch" onclick="toggleLanguage()">
+                <span class="en">中文</span>
+                <span class="zh">English</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="subtitle-en">Build Something Amazing</div>
+            <h1>
+                <span class="en">Web Application Toolkit</span>
+                <span class="zh">Web应用百宝库</span>
+            </h1>
+            <div class="subtitle-cn zh">构建令人惊叹的东西</div>
+            <p class="en">Create stunning websites and applications with our modern development solutions. Let's turn your ideas into reality.</p>
+            <p class="zh">使用我们的现代开发解决方案创建令人惊叹的网站和应用程序。让我们将您的想法变为现实。</p>
+            
+            <!-- 导航栏 - 添加第四和第五部分的链接 -->
+            <div class="nav-container">
+                <a href="#need-research" class="nav-link need">
+                    <span class="en">Research</span>
+                    <span class="zh">需求和调研</span>
+                </a>
+                <a href="#site-setup" class="nav-link setup">
+                    <span class="en">Setup</span>
+                    <span class="zh">上站必备</span>
+                </a>
+                <a href="#competitor-research" class="nav-link research">
+                    <span class="en">Analysis</span>
+                    <span class="zh">竞品调研</span>
+                </a>
+                <a href="#website-templates" class="nav-link templates">
+                    <span class="en">Templates</span>
+                    <span class="zh">上站模板</span>
+                </a>
+                <a href="#nav-templates" class="nav-link nav">
+                    <span class="en">Nav Sites</span>
+                    <span class="zh">导航站</span>
+                </a>
+                <a href="#website-consulting" class="nav-link consulting">
+                    <span class="en">Resources</span>
+                    <span class="zh">建站咨询</span>
+                </a>
+            </div>
+        </header>
+        
+        <div class="content-area">
+            <section id="need-research" class="section">
+                <h2>
+                    <span class="en">Research & Requirements</span>
+                    <span class="zh">需求和调研</span>
+                </h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Google Suggest</span>
+                            <span class="zh">谷歌下拉词</span>
+                        </h3>
+                        <a href="https://www.searchsuggest.tips/?keyword=" target="_blank">searchsuggest.tips</a>
+                        <p class="en">Query Google search dropdown keyword suggestions</p>
+                        <p class="zh">查询谷歌搜索下拉框关键词推荐</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Toolify Rankings</span>
+                            <span class="zh">Toolify 榜单</span>
+                        </h3>
+                        <a href="https://www.toolify.ai/Best-AI-Tools-revenue" target="_blank">toolify.ai</a>
+                        <p class="en">AI tools revenue rankings</p>
+                        <p class="zh">AI工具收入排行榜</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Request List</span>
+                            <span class="zh">需求列表</span>
+                        </h3>
+                        <a href="https://theresanaiforthat.com/requests" target="_blank">theresanaiforthat.com</a>
+                        <p class="en">View user requests for AI tools</p>
+                        <p class="zh">查看用户对AI工具的需求</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Keyword Difficulty</span>
+                            <span class="zh">关键词难度</span>
+                        </h3>
+                        <a href="https://ahrefs.com/keyword-difficulty" target="_blank">ahrefs.com</a>
+                        <p class="en">Analyze keyword competition difficulty</p>
+                        <p class="zh">分析关键词竞争难度</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="site-setup" class="section">
+                <h2>
+                    <span class="en">Website Setup Essentials</span>
+                    <span class="zh">上站必备</span>
+                </h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Domain Search</span>
+                            <span class="zh">域名查询</span>
+                        </h3>
+                        <a href="https://leandomainsearch.com/" target="_blank">leandomainsearch.com</a>
+                        <a href="https://query.domains/" target="_blank">query.domains</a>
+                        <p class="en">Search for available domains</p>
+                        <p class="zh">查询可用的域名</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Domain Registration</span>
+                            <span class="zh">域名注册</span>
+                        </h3>
+                        <a href="https://spaceship.com" target="_blank">spaceship.com</a>
+                        <a href="https://porkbun.com" target="_blank">porkbun.com</a>
+                        <a href="https://namecheap.com" target="_blank">namecheap.com</a>
+                        <p class="en">Domain registration services</p>
+                        <p class="zh">域名注册服务商</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Code & Website Hosting</span>
+                            <span class="zh">代码&网站托管</span>
+                        </h3>
+                        <a href="https://github.com" target="_blank">github.com</a>
+                        <a href="https://cloudflare.com" target="_blank">cloudflare.com</a>
+                        <a href="https://vercel.com" target="_blank">vercel.com</a>
+                        <p class="en">Code hosting and website deployment platforms</p>
+                        <p class="zh">代码托管和网站部署平台</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Analytics Dashboards</span>
+                            <span class="zh">数据后台</span>
+                        </h3>
+                        <a href="https://search.google.com/search-console" target="_blank">Google Search Console</a>
+                        <a href="https://analytics.google.com/analytics/web/#" target="_blank">Google Analytics</a>
+                        <a href="https://www.bing.com/webmasters/about" target="_blank">Bing Webmaster Tools</a>
+                        <p class="en">Website analytics tools</p>
+                        <p class="zh">网站数据分析工具</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="competitor-research" class="section">
+                <h2>
+                    <span class="en">Competitor Analysis</span>
+                    <span class="zh">竞品调研</span>
+                </h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Website Traffic</span>
+                            <span class="zh">网页流量</span>
+                        </h3>
+                        <a href="https://aitdk.com" target="_blank">aitdk.com</a>
+                        <p class="en">Analyze website traffic data</p>
+                        <p class="zh">分析网站流量数据</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Backlink Analysis</span>
+                            <span class="zh">外链查看</span>
+                        </h3>
+                        <a href="https://ahrefs.com/free-seo-tools" target="_blank">ahrefs.com</a>
+                        <p class="en">Check website external links</p>
+                        <p class="zh">查看网站外部链接情况</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>
+                            <span class="en">Keyword Rankings</span>
+                            <span class="zh">网站关键词</span>
+                        </h3>
+                        <a href="https://semrush.com" target="_blank">semrush.com</a>
+                        <p class="en">Analyze website keyword rankings</p>
+                        <p class="zh">分析网站关键词排名</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="website-templates" class="section">
+                <h2>
+                    <span class="en">Website Templates</span>
+                    <span class="zh">上站模板</span>
+                </h2>
+                <p class="section-desc en">A collection of valuable website templates and boilerplates</p>
+                <p class="section-desc zh">上站开源模板合集，价值百万点击查看合集</p>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">Next.js & React Templates</span>
+                            <span class="zh">Next.js 和 React 模板</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-letter">A.</span>
+                                <a href="https://github.com/openRin/Rin" target="_blank">https://github.com/openRin/Rin</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">B.</span>
+                                <a href="https://github.com/ixartz/Next-js-Boilerplate" target="_blank">https://github.com/ixartz/Next-js-Boilerplate</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">C.</span>
+                                <a href="https://github.com/ixartz/SaaS-Boilerplate" target="_blank">https://github.com/ixartz/SaaS-Boilerplate</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">D.</span>
+                                <a href="https://github.com/ixartz/Next-JS-Landing-Page-Starter-Template" target="_blank">https://github.com/ixartz/Next-JS-Landing-Page-Starter-Template</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">Astro & Modern Frameworks</span>
+                            <span class="zh">Astro 和现代框架</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-letter">E.</span>
+                                <a href="https://github.com/ixartz/Astro-boilerplate" target="_blank">https://github.com/ixartz/Astro-boilerplate</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">F.</span>
+                                <a href="https://github.com/weijunext/landing-page-boilerplate" target="_blank">https://github.com/weijunext/landing-page-boilerplate</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">G.</span>
+                                <a href="https://github.com/ai-aigc-studio/Viggle-AI-WebUI" target="_blank">https://github.com/ai-aigc-studio/Viggle-AI-WebUI</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">H.</span>
+                                <a href="https://github.com/weijunext/new-blog" target="_blank">https://github.com/weijunext/new-blog</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">SaaS & AI Projects</span>
+                            <span class="zh">SaaS 和 AI 项目</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-letter">I.</span>
+                                <a href="https://github.com/weijunext/gapis.money" target="_blank">https://github.com/weijunext/gapis.money</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">J.</span>
+                                <a href="https://github.com/daimaijia/huntscreens" target="_blank">https://github.com/daimaijia/huntscreens</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">K.</span>
+                                <a href="https://github.com/weijunext/smart-excel-ai" target="_blank">https://github.com/weijunext/smart-excel-ai</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">L.</span>
+                                <a href="https://github.com/ashleyrudland/nextjs_vps" target="_blank">https://github.com/ashleyrudland/nextjs_vps</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">M.</span>
+                                <a href="https://github.com/Pwntus/change-hairstyle-ai" target="_blank">https://github.com/Pwntus/change-hairstyle-ai</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">N.</span>
+                                <a href="https://github.com/replicate/green-screen-creator" target="_blank">https://github.com/replicate/green-screen-creator</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">Open Source SaaS</span>
+                            <span class="zh">开源 SaaS 项目</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-letter">O.</span>
+                                <a href="https://github.com/wasp-lang/open-saas/" target="_blank">https://github.com/wasp-lang/open-saas/</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">P.</span>
+                                <a href="https://github.com/ocluf/justship" target="_blank">https://github.com/ocluf/justship</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">Q.</span>
+                                <a href="https://github.com/JavascriptMick/supanuxt-saas" target="_blank">https://github.com/JavascriptMick/supanuxt-saas</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">R.</span>
+                                <a href="https://github.com/saasfly/saasfly" target="_blank">https://github.com/saasfly/saasfly</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">S.</span>
+                                <a href="https://github.com/mundane799699/xlike-web" target="_blank">https://github.com/mundane799699/xlike-web</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="nav-templates" class="section">
+                <h2>
+                    <span class="en">Navigation Site Templates</span>
+                    <span class="zh">导航站模板</span>
+                </h2>
+                <p class="section-desc en">A collection of navigation website templates</p>
+                <p class="section-desc zh">导航站模板合集，价值百万点击查看合集</p>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">Navigation Templates</span>
+                            <span class="zh">导航站模板</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-letter">A.</span>
+                                <a href="https://github.com/fre123-com/fre123-nav/" target="_blank">https://github.com/fre123-com/fre123-nav/</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">B.</span>
+                                <a href="https://github.com/dubinc/oss-gallery?ref=ossgallery" target="_blank">https://github.com/dubinc/oss-gallery?ref=ossgallery</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">C.</span>
+                                <a href="https://github.com/WebStackPage/WebStackPage.github.io" target="_blank">https://github.com/WebStackPage/WebStackPage.github.io</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">D.</span>
+                                <a href="https://github.com/6677-ai/tap4-ai-webui" target="_blank">https://github.com/6677-ai/tap4-ai-webui</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">E.</span>
+                                <a href="https://github.com/all-in-aigc/gpts-works" target="_blank">https://github.com/all-in-aigc/gpts-works</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">F.</span>
+                                <a href="https://github.com/ddahan/ui-libs" target="_blank">https://github.com/ddahan/ui-libs</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">G.</span>
+                                <a href="https://github.com/DokeyAI/dokeyai-data" target="_blank">https://github.com/DokeyAI/dokeyai-data</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="website-consulting" class="section">
+                <h2>
+                    <span class="en">Website Building Resources</span>
+                    <span class="zh">建站咨询</span>
+                </h2>
+                <p class="section-desc en">Resources for website building and SEO</p>
+                <p class="section-desc zh">建站和SEO相关资源</p>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">Community Resources</span>
+                            <span class="zh">社区资源</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-number">1.</span>
+                                <span class="template-title en">Reddit Communities</span>
+                                <span class="template-title zh">Reddit 子社区</span>
+                                <a href="https://liberating-doll-b8a.notion.site/Reddit-1a8e8aed91b1802183ecba8b74e530b" target="_blank">https://liberating-doll-b8a.notion.site/Reddit-1a8e8aed91b1802183ecba8b74e530b</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-number">2.</span>
+                                <span class="template-title en">Google SEO Knowledge</span>
+                                <span class="template-title zh">谷歌 SEO 知识</span>
+                                <a href="https://developers.google.com/search/docs/fundamentals/creating-helpful-content?hl=zh-cn" target="_blank">https://developers.google.com/search/docs/fundamentals/creating-helpful-content?hl=zh-cn</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="collapsible-section">
+                    <div class="collapsible-header">
+                        <div class="collapsible-title">
+                            <span class="en">Other Collections</span>
+                            <span class="zh">其他合集</span>
+                        </div>
+                        <svg class="collapsible-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 9L12 15L18 9" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="template-list">
+                            <div class="template-item">
+                                <span class="template-letter">A.</span>
+                                <a href="https://ahrefs.com/websites#trending" target="_blank">https://ahrefs.com/websites#trending</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">B.</span>
+                                <a href="https://docs.google.com/spreadsheets/d/1QOdq9KbjQj1jZO43vc1pir2rnEEsMUXzTDATrOCn2k/edit?pli=1&gid=0#gid=0" target="_blank">https://docs.google.com/spreadsheets/d/1QOdq9KbjQj1jZO43vc1pir2rnEEsMUXzTDATrOCn2k/edit?pli=1&gid=0#gid=0</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">C.</span>
+                                <a href="https://docs.google.com/spreadsheets/d/1eUni44pIURML2VWFFXKzNmm-WKuuam9_ynr5Fo_Q74M/edit?gid=83151001#gid=83151001" target="_blank">https://docs.google.com/spreadsheets/d/1eUni44pIURML2VWFFXKzNmm-WKuuam9_ynr5Fo_Q74M/edit?gid=83151001#gid=83151001</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">D.</span>
+                                <a href="https://www.500mrr.com/" target="_blank">https://www.500mrr.com/</a>
+                            </div>
+                            
+                            <div class="template-item">
+                                <span class="template-letter">E.</span>
+                                <a href="https://news.ycombinator.com/item?id=42373343" target="_blank">https://news.ycombinator.com/item?id=42373343</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <footer>
+                <p class="en">© 2023 DevlightHouse - Providing essential tools for web developers and operators</p>
+                <p class="zh">© 2023 DevlightHouse - 为网站开发者和运营者提供实用工具导航</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 添加提示框 -->
+    <div class="tooltip" id="bookmarkTooltip">
+        <p class="en">Press <kbd>Ctrl</kbd> + <kbd>D</kbd> (Windows) or <kbd>⌘</kbd> + <kbd>D</kbd> (Mac) to bookmark this page</p>
+        <p class="zh">按下 <kbd>Ctrl</kbd> + <kbd>D</kbd> (Windows) 或 <kbd>⌘</kbd> + <kbd>D</kbd> (Mac) 将本页面添加到书签</p>
+        <button class="close-tooltip" id="closeTooltip">
+            <span class="en">Close</span>
+            <span class="zh">关闭</span>
+        </button>
+    </div>
+
+    <script>
+        // 语言切换功能
+        function toggleLanguage() {
+            const htmlElement = document.documentElement;
+            if (htmlElement.lang === 'zh') {
+                htmlElement.lang = 'en';
+                document.title = 'DevlightHouse - Web Application Toolkit';
+            } else {
+                htmlElement.lang = 'zh';
+                document.title = 'DevlightHouse - Web应用百宝库';
+            }
+            
+            // 添加调试信息
+            console.log('Language switched to: ' + htmlElement.lang);
+        }
+        
+        // 折叠功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const collapsibleSections = document.querySelectorAll('.collapsible-section');
+            
+            collapsibleSections.forEach(section => {
+                const header = section.querySelector('.collapsible-header');
+                
+                header.addEventListener('click', function() {
+                    section.classList.toggle('active');
+                });
+            });
+            
+            // 收藏按钮功能
+            const bookmarkButton = document.getElementById('bookmarkButton');
+            const tooltip = document.getElementById('bookmarkTooltip');
+            const closeTooltip = document.getElementById('closeTooltip');
+            
+            bookmarkButton.addEventListener('click', function() {
+                // 显示提示框
+                tooltip.classList.add('show');
+                
+                // 尝试添加书签 (这在大多数现代浏览器中会被安全策略阻止)
+                try {
+                    if (window.sidebar && window.sidebar.addPanel) { // Firefox
+                        window.sidebar.addPanel(document.title, window.location.href, '');
+                    } else if (window.external && ('AddFavorite' in window.external)) { // IE
+                        window.external.AddFavorite(window.location.href, document.title);
+                    } else { // Chrome, Safari, Opera, etc.
+                        // 这些浏览器不允许JavaScript直接添加书签，所以只显示提示
+                        console.log('Press Ctrl+D (Windows) or Cmd+D (Mac) to bookmark this page');
+                    }
+                } catch (e) {
+                    console.log('Bookmark function failed. Please use Ctrl+D (Windows) or Cmd+D (Mac)');
+                }
+                
+                // 5秒后自动关闭提示
+                setTimeout(function() {
+                    tooltip.classList.remove('show');
+                }, 5000);
+            });
+            
+            closeTooltip.addEventListener('click', function() {
+                tooltip.classList.remove('show');
+            });
+        });
+    </script>
+</body>
+</html> 
